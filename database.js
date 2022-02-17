@@ -1,7 +1,8 @@
 import {Sequelize, DataTypes} from 'sequelize';
+import getMessagesModel from './models/messages.js';
 
 class Database {
-  constructor() {
+  async initial() {
     this.database = new Sequelize(
       'postgres',
       process.env.DATABASE_USER,
@@ -12,6 +13,7 @@ class Database {
       }
     );
 
+    await this.database.authenticate();
     this.defineModels();
   }
 
@@ -23,28 +25,19 @@ class Database {
     }
   }
 
-  defineModels() {
-    this.Messages = this.database.define('messages', {
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      content: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-    });
+  async defineModels() {
+    const models = {
+      Messages: getMessagesModel(this.database, DataTypes),
+    };
 
-    this.Messages.sync({alter: true});
+    Object.keys(models).forEach((key) => {
+      const model = models[key];
+      this[key] = model;
+      if ('associate' in model) {
+        model.associate(models);
+      }
+    });
   }
 }
 
-export default Database;
+export default new Database();
