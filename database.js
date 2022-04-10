@@ -10,7 +10,7 @@ class Database {
       {
         host: 'localhost',
         dialect: 'postgres',
-      }
+      },
     );
 
     await this.database.authenticate();

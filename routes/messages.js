@@ -1,12 +1,12 @@
 import database from '../database.js';
 
 export default function (fastify, opts, done) {
-  fastify.get('/', async (request, reply) => {
+  fastify.get('/', async () => {
     const messages = await database.Messages.findAll();
     return messages;
   });
 
-  fastify.post('/', async (request, reply) => {
+  fastify.post('/', async (request) => {
     const {title, content} = request.body;
     const result = await database.Messages.create({
       title,
@@ -15,7 +15,7 @@ export default function (fastify, opts, done) {
     return result;
   });
 
-  fastify.delete('/:id', async (request, reply) => {
+  fastify.delete('/:id', async (request) => {
     const {id} = request.params;
     await database.Messages.destroy({
       where: {
@@ -25,7 +25,7 @@ export default function (fastify, opts, done) {
     return 'ok';
   });
 
-  fastify.put('/:id', async (request, reply) => {
+  fastify.put('/:id', async (request) => {
     const {id} = request.params;
     const {title, content} = request.body;
     console.log({title, content, id});
@@ -35,7 +35,7 @@ export default function (fastify, opts, done) {
         where: {
           id,
         },
-      }
+      },
     );
     return 'ok';
   });

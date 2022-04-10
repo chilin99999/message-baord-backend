@@ -16,7 +16,7 @@ const fastify = Fastify({
 fastify.register(FastifyCors);
 fastify.register(MessagesRoutes, {prefix: '/messages'});
 
-fastify.get('/', async (request, reply) => {
+fastify.get('/', async () => {
   return {hello: 'world'};
 });
 
