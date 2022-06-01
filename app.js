@@ -4,6 +4,7 @@ import path from 'path';
 import FastifyCors from 'fastify-cors';
 import database from './database.js';
 import MessagesRoutes from './routes/messages.js';
+import UsersRoutes from './routes/users.js';
 
 const __dirname = path.resolve();
 dotenv.config({path: __dirname + '/.env'});
@@ -15,6 +16,7 @@ const fastify = Fastify({
 });
 fastify.register(FastifyCors);
 fastify.register(MessagesRoutes, {prefix: '/messages'});
+fastify.register(UsersRoutes, {prefix: '/users'});
 
 fastify.get('/', async () => {
   return {hello: 'world'};
